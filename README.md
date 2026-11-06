@@ -1,13 +1,6 @@
 # Modelagem-Analise-Dados-MySQL
 Repositório dedicado ao projeto de Modelagem, consulta e análise de banco de dados.
 
-# 🎵 Spotify DB - Plataforma de Análise e Avaliação Musical
-
-![Status do Projeto](https://img.shields.io/badge/Status-Concluído-success)
-![Python Version](https://img.shields.io/badge/Python-3.12-blue)
-![MySQL Version](https://img.shields.io/badge/MySQL-8.0-orange)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
-
 ## 🚀 Como Executar o Projeto Localmente
 
 ### 1. Pré-requisitos
