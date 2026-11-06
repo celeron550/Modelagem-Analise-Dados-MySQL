@@ -19,9 +19,6 @@
 -- Table structure for table `Album`
 --
 
-CREATE DATABASE IF NOT EXISTS engenharia_musica;
-USE engenharia_musica;
-
 DROP TABLE IF EXISTS `Album`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -33,7 +30,7 @@ CREATE TABLE `Album` (
   PRIMARY KEY (`id_album`),
   KEY `id_artista` (`id_artista`),
   CONSTRAINT `Album_ibfk_1` FOREIGN KEY (`id_artista`) REFERENCES `Artista` (`id_artista`)
-) ENGINE=InnoDB AUTO_INCREMENT=1024 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=619 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,7 +59,7 @@ CREATE TABLE `Artista` (
   `artist_url` text,
   PRIMARY KEY (`id_artista`),
   UNIQUE KEY `artist_name` (`artist_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,6 +70,37 @@ LOCK TABLES `Artista` WRITE;
 /*!40000 ALTER TABLE `Artista` DISABLE KEYS */;
 INSERT INTO `Artista` VALUES (1,'Ariana Grande','pop',98934105,89,'https://open.spotify.com/artist/66CXWjxzNUsdJxJ2JdwvnR'),(2,'Adele','british soul, pop, pop soul, uk pop',57782264,84,'https://open.spotify.com/artist/4dpARuHxo51G3z768sgnrY'),(3,'A$AP Rocky','east coast hip hop, hip hop, rap',14740526,83,'https://open.spotify.com/artist/13ubrt8QOOCPljQ2FL1Kca'),(4,'Taylor Swift','pop',119286617,92,'https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02'),(5,'Arctic Monkeys','garage rock, modern rock, permanent wave, rock, sheffield indie',26055385,91,'https://open.spotify.com/artist/7Ln80lUS6He07XvHI8qqHH'),(6,'Alice In Chains','alternative metal, alternative rock, grunge, hard rock, nu metal, rock',5216015,76,'https://open.spotify.com/artist/64tNsm6TnZe2zpcMVMOoHL'),(7,'Anuel AA','reggaeton, reggaeton flow, trap boricua, trap latino, urbano latino',37214358,81,'https://open.spotify.com/artist/2R21vXR83lH98kGeO99Y66'),(8,'ABBA','europop, swedish pop',12698682,85,'https://open.spotify.com/artist/0LcJLqbBmaGUft1e9Mm8HV'),(9,'AJR','pov: indie',3427137,66,'https://open.spotify.com/artist/6s22t5Y3prQHyaHWUN1R1C'),(10,'AC/DC','australian rock, hard rock, rock',29139022,86,'https://open.spotify.com/artist/711MCceyCBcFnzjGY4Q7Un'),(11,'Alex G','philly indie, pov: indie, slacker rock',2328522,80,'https://open.spotify.com/artist/6lcwlkAjBPSKnFBZjjZFJs'),(12,'A Boogie Wit da Hoodie','melodic rap, rap, trap',8383447,76,'https://open.spotify.com/artist/31W5EY0aAly4Qieq6OFu6I'),(13,'Addison Rae','social media pop',318765,77,'https://open.spotify.com/artist/4gvjmrtzydbMpyJaXUtwvP'),(14,'Halsey','electropop, etherpop, indie poptimism, pop',21674751,84,'https://open.spotify.com/artist/26VFTg2z8YR0cCuwLzESi2'),(15,'Romeo Santos','bachata, latin hip hop, latin pop, urbano latino',22006054,81,'https://open.spotify.com/artist/5lwmRuXgjX8xIwlnauTZIP'),(16,'Aventura','bachata, bachata dominicana, latin hip hop, latin pop, tropical, urbano latino',8480094,79,'https://open.spotify.com/artist/1qto4hHid1P71emI6Fd8xi'),(17,'Gunna','atl hip hop, melodic rap, rap, trap',7819110,86,'https://open.spotify.com/artist/2hlmm7s2ICUX0LVIhVFlZQ'),(18,'Avril Lavigne','canadian pop, candy pop, dance pop, pop',11207940,83,'https://open.spotify.com/artist/0p4nmQO2msCgU4IF37Wi3j'),(19,'Akon','dance pop',4816768,84,'https://open.spotify.com/artist/0z4gvV4rjIZ9wHck67ucSV'),(20,'Avenged Sevenfold','alternative metal',8135038,76,'https://open.spotify.com/artist/0nmQIMXWTXfhgOBdNzhGOs'),(21,'Arijit Singh','filmi, modern bollywood',119428689,82,'https://open.spotify.com/artist/4YRxDV8wJFPHPTeXepOstw'),(22,'Anderson .Paak','escape room, hip hop, indie soul, neo soul',2559747,80,'https://open.spotify.com/artist/3jK9MiCrA42lLAdMGUZpwa'),(23,'Amy Winehouse','british soul, neo soul',9015775,81,'https://open.spotify.com/artist/6Q192DXotxtaysaqNPy5yR'),(24,'Artemas',NULL,875287,80,'https://open.spotify.com/artist/0PCCGZ0wGLizHt2KZ7hhA2'),(25,'Adrianne Lenker','countrygaze, indie pop, small room',567595,77,'https://open.spotify.com/artist/4aKWmkWAKviFlyvHYPTNQY'),(26,'ATEEZ','k-pop, k-pop boy group',4174753,75,'https://open.spotify.com/artist/68KmkJeZGfwe1OUaivBa2L'),(27,'All Time Low','modern rock, neon pop punk, pop emo, pop punk',3042816,77,'https://open.spotify.com/artist/46gyXjRIvN1NL1eCB8GBxo'),(28,'Arcángel','latin hip hop, reggaeton, trap latino, urbano latino',15017847,77,'https://open.spotify.com/artist/4SsVbpTthjScTS7U2hmr1X'),(29,'A Day To Remember','alternative metal, metalcore, neon pop punk, pop punk, screamo',2354675,68,'https://open.spotify.com/artist/4NiJW4q9ichVqL1aUsgGAN'),(30,'Alicia Keys','neo soul, pop, r&b',11997483,83,'https://open.spotify.com/artist/3DiDSECUqqY1AuBP8qtaIa'),(31,'Ayesha Erotica',NULL,1231864,73,'https://open.spotify.com/artist/7M5pDtJpCdnftEQZtczYco'),(32,'Young Thug','atl hip hop, atl trap, gangster rap, melodic rap, rap, trap',10288468,82,'https://open.spotify.com/artist/50co4Is1HCEo8bhOyUWKpn'),(33,'Avicii','dance pop, edm, pop, pop dance',22976158,86,'https://open.spotify.com/artist/1vCWHaC5f2uS3yhpwWbIA6'),(34,'aespa','k-pop girl group',6165098,75,'https://open.spotify.com/artist/6YVMFz59CuY7ngCxTxjpxE'),(35,'El Alfa','dembow, rap dominicano, trap latino, urbano latino',3571462,78,'https://open.spotify.com/artist/2oQX8QiMXOyuqbcZEFsZfm'),(36,'Alanis Morissette','canadian pop, canadian singer-songwriter, lilith, neo mellow, pop rock, singer-songwriter',2887083,73,'https://open.spotify.com/artist/6ogn9necmbUdCppmNnGOdi'),(37,'AURORA','art pop, norwegian pop',3764619,71,'https://open.spotify.com/artist/1WgXqy2Dd70QQOU7Ay074N'),(38,'Asake','afrobeats, nigerian pop',3930967,73,'https://open.spotify.com/artist/3a1tBryiczPAZpgoZN9Rzg'),(39,'Alan Jackson','country',2810955,74,'https://open.spotify.com/artist/4mxWe1mtYIYfP040G38yvS'),(40,'Ed Sheeran','pop, singer-songwriter pop, uk pop',115449586,85,'https://open.spotify.com/artist/6eUKZXaKkcviH0Ku9w2n3V'),(41,'Aphex Twin','ambient, braindance, electronica, intelligent dance music, uk experimental electronic',1447644,71,'https://open.spotify.com/artist/6kBDZFXuLrZgHnvmPu9NsG'),(42,'Jason Derulo','dance pop, pop',12157241,77,'https://open.spotify.com/artist/07YZf4WDAMNwqr4jfgOZ8y'),(43,'Alan Walker','electro house',39210855,81,'https://open.spotify.com/artist/7vk5e3vY1uw9plTHJAMwjN'),(44,'Alvvays','art pop, chamber pop, dream pop, dreamo, indie pop, indie rock, noise pop, shoegaze, toronto indie',575931,62,'https://open.spotify.com/artist/3kzwYV3OCB010YfXMF0Avt'),(45,'Ava Max','pop',7041802,76,'https://open.spotify.com/artist/4npEfmQ6YuiwW1GpUmaq3F'),(46,'Alice Cooper','album rock, classic rock, detroit rock, glam metal, glam rock, hard rock, metal, protopunk, rock',3740417,71,'https://open.spotify.com/artist/3EhbVgyfGd7HkpsagwL9GS'),(47,'Alfredo Olivas','banda, corrido, musica mexicana, norteno, sad sierreno, sierreno',8774350,78,'https://open.spotify.com/artist/5xYNmNkaWRqu3e5F4UXME8'),(48,'alex_g_offline',NULL,690529,75,'https://open.spotify.com/artist/0bC6e2YtIRLbKx2txHFmEo'),(49,'Christina Aguilera','dance pop, pop',8411343,49,'https://open.spotify.com/artist/1l7ZsJRRS8wlW3WfJfPfNS'),(50,'Alec Benjamin','alt z, pop, pov: indie',5186665,82,'https://open.spotify.com/artist/5IH6FPUwQTxPSXurCrcIov'),(51,'Aerosmith','album rock, classic rock, hard rock, rock',14505641,82,'https://open.spotify.com/artist/7Ey4PD4MYsKc5I2dolUwbH'),(52,'Aly & AJ','dance pop, girl group, post-teen pop',680583,63,'https://open.spotify.com/artist/5wugb0kaq0J6nyQ5Xgd17i'),(53,'USHER','atl hip hop, contemporary r&b, dance pop, pop, r&b, rap, south carolina hip hop, urban contemporary',11933139,85,'https://open.spotify.com/artist/23zg3TcAtWQy7J6upgbUnj'),(54,'AFI','alternative metal, nu metal, pop punk, post-grunge, punk, screamo',924438,70,'https://open.spotify.com/artist/19I4tYiChJoxEO5EuviXpz'),(55,'Alex Warren','gen z singer-songwriter, singer-songwriter pop',451326,85,'https://open.spotify.com/artist/0fTSzq9jAh4c36UVb4V7CB'),(56,'Johann Sebastian Bach','baroque, classical, early music, german baroque',4406930,63,'https://open.spotify.com/artist/5aIqB5nVVvmFsvSdExz408'),(57,'The Alchemist','alternative hip hop, drumless hip hop, hip hop, instrumental hip hop, west coast rap',708235,69,'https://open.spotify.com/artist/0eVyjRhzZKke2KFYTcDkeu'),(58,'Ashnikko','alt z, escape room',2355237,71,'https://open.spotify.com/artist/3PyJHH2wyfQK3WZrk9rpmP'),(59,'A','british alternative rock',16997,41,'https://open.spotify.com/artist/3HBxYEtI2i43MzWyTXupVv'),(60,'HARDY','contemporary country, modern country pop',1076900,79,'https://open.spotify.com/artist/5QNm7E7RU2m64l6Gliu8Oy'),(61,'Anitta','funk pop, funk rj, pagode baiano, pop, pop nacional',12561720,73,'https://open.spotify.com/artist/7FNnA9vBm6EKceENgCGRMb'),(62,'La Arrolladora Banda El Limón De Rene Camacho','banda, musica mexicana, norteno',7005423,61,'https://open.spotify.com/artist/5bSfBBCxY8QAk4Pifveisz'),(63,'A$AP Ferg','hip hop, pop rap, rap, southern hip hop, trap',3813155,77,'https://open.spotify.com/artist/5dHt1vcEm9qb8fCyLcB3HL'),(64,'Ayra Starr','afrobeats',3434959,84,'https://open.spotify.com/artist/3ZpEKRjHaHANcpk10u6Ntq'),(65,'Alok','electro house, pop nacional, slap house',11291607,81,'https://open.spotify.com/artist/0NGAZxHanS9e0iNHpR8f2W'),(66,'Aaron May','conscious hip hop',540960,77,'https://open.spotify.com/artist/2rwALQ1SXdfUWPUd6WOfYS'),(67,'Anne-Marie','pop',12038839,85,'https://open.spotify.com/artist/1zNqDE7qDGCsyzJwohVaoX'),(68,'Andrew Underberg',NULL,147884,72,'https://open.spotify.com/artist/4zXroEby35IgWPERRcW4Ay'),(69,'Anirudh Ravichander','desi hip hop, filmi, tamil hip hop',31427977,74,'https://open.spotify.com/artist/4zCH9qm4R2DADamUHMCa6O'),(70,'Wolfgang Amadeus Mozart','classical, classical era',5449802,58,'https://open.spotify.com/artist/4NJhFmfw43RLBLjQvxDuRS'),(71,'Ne-Yo','dance pop, pop, r&b, urban contemporary',9033803,86,'https://open.spotify.com/artist/21E3waRsmPlU7jZsS13rcj'),(72,'Alesso','dance pop, edm, pop, pop dance, progressive electro house',3923709,78,'https://open.spotify.com/artist/4AVFqumd2ogHFlRbKIjp1t'),(73,'Rauw Alejandro','puerto rican pop, reggaeton, trap latino, urbano latino',22919287,84,'https://open.spotify.com/artist/1mcTU81TzQhprhouKaTkpq'),(74,'AFROJACK','big room, dance pop, dutch house, edm, electro house, pop dance, progressive electro house',3922609,86,'https://open.spotify.com/artist/4D75GcNG95ebPtNvoNVXhz'),(75,'Ashanti','dance pop, hip pop, r&b, urban contemporary',3145769,73,'https://open.spotify.com/artist/5rkVyNGXEgeUqKkB5ccK83'),(76,'Agust D','k-rap',14816559,85,'https://open.spotify.com/artist/5RmQ8k4l3HZ8JoPb4mNsML'),(77,'Alabama','contemporary country, country, country road, country rock',1435685,71,'https://open.spotify.com/artist/6rJqqRce0Kvo2dJUXoHleC'),(78,'Alessia Cara','canadian contemporary r&b, canadian pop, pop',11810442,76,'https://open.spotify.com/artist/2wUjUUtkb5lvLKcGKsKqsR'),(79,'America','album rock, classic rock, folk rock, mellow gold, soft rock',1779973,77,'https://open.spotify.com/artist/35U9lQaRWSQISxQAB94Meo'),(80,'Andy Grammer','neo mellow, post-teen pop, viral pop',1232633,77,'https://open.spotify.com/artist/2oX42qP5ineK3hrhBECLmj'),(81,'The All-American Rejects','alternative metal, modern rock, neo mellow, neon pop punk, pop punk, pop rock, post-grunge',2666769,71,'https://open.spotify.com/artist/3vAaWhdBR38Q02ohXqaNHT'),(82,'Armin van Buuren','dutch house, dutch trance, edm, pop dance, progressive house, trance',4384944,71,'https://open.spotify.com/artist/0SfsnGyD8FpIN4U4WCkBZ5'),(83,'Alvaro Diaz','trap boricua, urbano latino',842057,80,'https://open.spotify.com/artist/5J7rXWjtn5HzUkJ4Jet8Fr'),(84,'Ado','japanese teen pop',4857566,72,'https://open.spotify.com/artist/6mEQK9m2krja6X1cfsAjfl'),(85,'Aaliyah','contemporary r&b, dance pop, hip pop, r&b, urban contemporary',4425212,69,'https://open.spotify.com/artist/0urTpYCsixqZwgNTkPJOJ4'),(86,'Novo Amor','ambient folk, indie folk',1179457,77,'https://open.spotify.com/artist/0rZp7G3gIH6WkyeXbrZnGi'),(87,'Gracie Abrams','alt z',2232980,87,'https://open.spotify.com/artist/4tuJ0bMpJh08umKkEXKUI5'),(88,'Outkast','atl hip hop, dirty south rap, hip hop, old school atlanta hip hop, rap, southern hip hop',2769972,84,'https://open.spotify.com/artist/1G9G7WwrXka3Z1r7aIDjI7');
 /*!40000 ALTER TABLE `Artista` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Avaliacao`
+--
+
+DROP TABLE IF EXISTS `Avaliacao`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Avaliacao` (
+  `id_avaliacao` int NOT NULL AUTO_INCREMENT,
+  `id_musica` int DEFAULT NULL,
+  `usuario_nome` varchar(100) NOT NULL,
+  `nota` int DEFAULT NULL,
+  `comentario` text,
+  `data_avaliacao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_avaliacao`),
+  KEY `id_musica` (`id_musica`),
+  CONSTRAINT `Avaliacao_ibfk_1` FOREIGN KEY (`id_musica`) REFERENCES `Musica` (`id_musica`) ON DELETE CASCADE,
+  CONSTRAINT `Avaliacao_chk_1` CHECK ((`nota` between 1 and 5))
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Avaliacao`
+--
+
+LOCK TABLES `Avaliacao` WRITE;
+/*!40000 ALTER TABLE `Avaliacao` DISABLE KEYS */;
+INSERT INTO `Avaliacao` VALUES (1,1,'Lucas',5,'Produção impecável, a batida é excelente!','2026-11-06 18:59:23'),(2,1,'Mariana',4,'Muito boa, mas a introdução é um pouco longa.','2026-11-06 18:59:23'),(3,2,'Roberto',3,'Legalzinha, mas não escutaria no repeat.','2026-11-06 18:59:23');
+/*!40000 ALTER TABLE `Avaliacao` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -95,7 +123,7 @@ CREATE TABLE `Musica` (
   PRIMARY KEY (`id_musica`),
   KEY `id_album` (`id_album`),
   CONSTRAINT `Musica_ibfk_1` FOREIGN KEY (`id_album`) REFERENCES `Album` (`id_album`)
-) ENGINE=InnoDB AUTO_INCREMENT=2048 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1033 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -161,4 +189,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-05 18:42:22
+-- Dump completed on 2026-11-06 16:01:51
