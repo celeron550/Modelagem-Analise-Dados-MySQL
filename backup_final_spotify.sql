@@ -176,7 +176,7 @@ CREATE TABLE `avaliacao_musica` (
   CONSTRAINT `avaliacao_musica_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE,
   CONSTRAINT `avaliacao_musica_ibfk_2` FOREIGN KEY (`id_musica`) REFERENCES `musica` (`id_musica`) ON DELETE CASCADE,
   CONSTRAINT `avaliacao_musica_chk_1` CHECK ((`nota` between 1 and 5))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,6 +185,7 @@ CREATE TABLE `avaliacao_musica` (
 
 LOCK TABLES `avaliacao_musica` WRITE;
 /*!40000 ALTER TABLE `avaliacao_musica` DISABLE KEYS */;
+INSERT INTO `avaliacao_musica` VALUES (1,1,404,3,'Muito boa, gostei muito!','2026-11-06 21:44:39'),(2,2,190,1,'Muito ruim, não gostei','2026-11-06 21:45:04'),(3,3,425,5,'Gosto muito do time, por isso gostei da musica!','2026-11-06 21:45:27');
 /*!40000 ALTER TABLE `avaliacao_musica` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -256,7 +257,7 @@ CREATE TABLE `usuario` (
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,6 +266,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (1,'Ricardo',NULL),(2,'Lucio',NULL),(3,'Pedro',NULL);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,4 +325,4 @@ USE `musica_app`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-06 18:35:12
+-- Dump completed on 2026-11-06 18:46:39
