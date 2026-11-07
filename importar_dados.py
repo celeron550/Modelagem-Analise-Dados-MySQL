@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 # Lê o arquivo local
 df = pd.read_csv('spotifydataset.csv')
 
-# Conecta ao MySQL (usuario root, senha 123456, banco engenharia_musica)
-engine = create_engine('mysql+mysqlconnector://root:123456@localhost/engenharia_musica')
+# Conecta ao MySQL (usuario root, senha 123456, banco musica_analise)
+engine = create_engine('mysql+mysqlconnector://root:123456@localhost/musica_analise')
 
 # Envia os dados inteiros para a tabela temporária
 df.to_sql('dataset_bruto', con=engine, if_exists='replace', index=False)
