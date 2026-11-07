@@ -26,10 +26,40 @@ menu = [
 escolha = st.sidebar.selectbox("Navegação do Sistema", menu)
 
 # ==========================================
-# 1. ANÁLISES E ESTATÍSTICAS (Exigência do Professor)
+# 1. ANÁLISES E ESTATÍSTICAS (Com SUM, AVG, MAX, MIN e Filtros)
 # ==========================================
 if escolha == "📈 Análises e Estatísticas":
-    st.subheader("Análise de Dados (Schema: musica_analise)")
+    st.subheader("Análise de Dados e Estatísticas Agregadas")
+    
+    conn_app = get_conexao("musica_app")
+    st.markdown("#### 🔍 Estatísticas por Gênero (View: `vw_estatisticas_genero`)")
+    
+    # Filtro Dinâmico por Gênero Musical
+    df_generos_list = pd.read_sql("SELECT DISTINCT nome_genero FROM genero ORDER BY nome_genero;", conn_app)
+    lista_generos = ["Todos"] + df_generos_list['nome_genero'].tolist()
+    genero_selecionado = st.selectbox("Filtrar Estatísticas por Gênero Musical:", lista_generos)
+    
+    if genero_selecionado == "Todos":
+        query_vw_gen = "SELECT * FROM vw_estatisticas_genero ORDER BY total_musicas DESC;"
+    else:
+        query_vw_gen = f"SELECT * FROM vw_estatisticas_genero WHERE nome_genero = '{genero_selecionado}';"
+        
+    df_vw_gen = pd.read_sql(query_vw_gen, conn_app)
+    
+    if not df_vw_gen.empty:
+        col1, col2, col3, col4, col5 = st.columns(5)
+        col1.metric("Total Músicas [COUNT]", f"{df_vw_gen['total_musicas'].sum():,}")
+        col2.metric("Duração Total (Min) [SUM]", f"{df_vw_gen['duracao_total_minutos'].sum():,.1f}")
+        col3.metric("Pop. Média [AVG]", f"{df_vw_gen['popularidade_media'].mean():.1f}")
+        col4.metric("Pop. Máxima [MAX]", int(df_vw_gen['popularidade_maxima'].max()))
+        col5.metric("Pop. Mínima [MIN]", int(df_vw_gen['popularidade_minima'].min()))
+        
+    st.dataframe(df_vw_gen, use_container_width=True)
+    conn_app.close()
+    
+    st.markdown("---")
+    
+    st.subheader("Análise do Catálogo Bruto (Schema: musica_analise)")
     conn = get_conexao("musica_analise")
     
     st.markdown("#### 1. Músicas Explícitas têm popularidade diferente?")
@@ -71,8 +101,8 @@ if escolha == "📈 Análises e Estatísticas":
         ORDER BY AVG(track_popularity) DESC;
     """, conn)
     st.dataframe(df_energia, use_container_width=True)
-    st.markdown("#### 4. Evolução da Popularidade e das Características Musicais por Ano")
 
+    st.markdown("#### 4. Evolução da Popularidade e das Características Musicais por Ano")
     df_anos = pd.read_sql("""
         SELECT
             CAST(LEFT(release_date, 4) AS UNSIGNED) AS ano,
@@ -82,8 +112,7 @@ if escolha == "📈 Análises e Estatísticas":
             ROUND(AVG(danceability), 3) AS dancabilidade_media
         FROM dataset_bruto
         WHERE release_date REGEXP '^[0-9]{4}'
-        GROUP BY
-            CAST(LEFT(release_date, 4) AS UNSIGNED)
+        GROUP BY CAST(LEFT(release_date, 4) AS UNSIGNED)
         HAVING COUNT(*) >= 5
         ORDER BY ano;
     """, conn)
@@ -92,32 +121,25 @@ if escolha == "📈 Análises e Estatísticas":
     st.dataframe(df_anos, use_container_width=True)
 
     st.markdown("**Evolução da popularidade média**")
-    st.line_chart(
-        df_anos.set_index("ano")[["popularidade_media"]]
-    )
+    st.line_chart(df_anos.set_index("ano")[["popularidade_media"]])
 
     st.markdown("**Evolução das características sonoras**")
-    st.line_chart(
-        df_anos.set_index("ano")[["energia_media", "dancabilidade_media"]]
-    )
+    st.line_chart(df_anos.set_index("ano")[["energia_media", "dancabilidade_media"]])
 
     st.markdown("**Quantidade de músicas por ano**")
-    st.bar_chart(
-        df_anos.set_index("ano")[["quantidade_musicas"]]
-    )
+    st.bar_chart(df_anos.set_index("ano")[["quantidade_musicas"]])
     conn.close()
 
 # ==========================================
 # 2. RANKING (O "IMDb da Música")
 # ==========================================
 elif escolha == "🏆 Ranking (IMDb da Música)":
-    st.subheader("Top Músicas Avaliadas pela Comunidade")
+    st.subheader("Top Músicas Avaliadas pela Comunidade (View: `vw_ranking_musicas`)")
     conn = get_conexao("musica_app")
     
-    # Usando a VIEW que criamos no schema.sql
     df_ranking = pd.read_sql("SELECT * FROM vw_ranking_musicas ORDER BY nota_media DESC, n_avaliacoes DESC LIMIT 50;", conn)
     
-    if not df_ranking.empty and df_ranking['nota_media'].max() > 0:
+    if not df_ranking.empty:
         st.dataframe(df_ranking, use_container_width=True)
     else:
         st.info("Ainda não há avaliações suficientes para formar um ranking.")
@@ -148,7 +170,6 @@ elif escolha == "📝 Fazer Avaliação":
                 st.error("Por favor, digite um nome de usuário.")
             else:
                 try:
-                    # Verifica se o usuário existe, se não, cria na hora
                     cursor.execute("SELECT id_usuario FROM usuario WHERE username = %s", (username,))
                     user = cursor.fetchone()
                     
@@ -158,7 +179,6 @@ elif escolha == "📝 Fazer Avaliação":
                         cursor.execute("INSERT INTO usuario (username) VALUES (%s)", (username,))
                         id_user = cursor.lastrowid
                     
-                    # Insere avaliação
                     cursor.execute(
                         "INSERT INTO avaliacao_musica (id_usuario, id_musica, nota, comentario) VALUES (%s, %s, %s, %s)", 
                         (id_user, id_musica, nota, comentario)
@@ -175,16 +195,21 @@ elif escolha == "📝 Fazer Avaliação":
     conn.close()
 
 # ==========================================
-# 4. GERENCIAR CATÁLOGO (CRUD Atualizado)
+# 4. GERENCIAR CATÁLOGO (CRUD Completo: Create, Read, Update, Delete)
 # ==========================================
 elif escolha == "⚙️ Gerenciar Catálogo (CRUD)":
-    st.subheader("Inserir, Atualizar ou Remover Músicas")
+    st.subheader("Operações de CRUD no Banco de Dados (`musica_app`)")
     conn = get_conexao("musica_app")
     cursor = conn.cursor()
     
-    acao = st.selectbox("Escolha a ação", ["Inserir Nova Música", "Atualizar Popularidade", "Remover Música"])
+    acao = st.selectbox("Escolha a ação desejada:", [
+        "1. Inserir Nova Música (Create)", 
+        "2. Consultar Registros (Read)",
+        "3. Atualizar Popularidade (Update)", 
+        "4. Remover Música (Delete)"
+    ])
     
-    if acao == "Inserir Nova Música":
+    if acao == "1. Inserir Nova Música (Create)":
         nome = st.text_input("Nome da Faixa")
         duracao = st.number_input("Duração (ms)", min_value=0, step=1000, value=200000)
         id_al = st.number_input("ID do Álbum", min_value=1, step=1)
@@ -199,7 +224,12 @@ elif escolha == "⚙️ Gerenciar Catálogo (CRUD)":
             conn.commit()
             st.success("Música inserida com sucesso!")
             
-    elif acao == "Atualizar Popularidade":
+    elif acao == "2. Consultar Registros (Read)":
+        tabela_read = st.radio("Selecione a tabela para consultar:", ["musica", "usuario", "avaliacao_musica"])
+        df_consulta = pd.read_sql(f"SELECT * FROM {tabela_read} ORDER BY 1 DESC LIMIT 100;", conn)
+        st.dataframe(df_consulta, use_container_width=True)
+
+    elif acao == "3. Atualizar Popularidade (Update)":
         id_mus = st.number_input("ID da Música Alvo", min_value=1, step=1)
         nova_pop = st.number_input("Nova Popularidade (0 a 100)", min_value=0, max_value=100, step=1)
         if st.button("Atualizar Métrica"):
@@ -207,7 +237,7 @@ elif escolha == "⚙️ Gerenciar Catálogo (CRUD)":
             conn.commit()
             st.success("Popularidade atualizada com sucesso!")
             
-    elif acao == "Remover Música":
+    elif acao == "4. Remover Música (Delete)":
         id_del = st.number_input("ID da Música para Exclusão", min_value=1, step=1)
         st.warning("⚠️ Atenção: A exclusão não pode ser desfeita e apagará também as avaliações desta música!")
         if st.button("Confirmar Exclusão"):
@@ -230,3 +260,4 @@ elif escolha == "🗃️ Visão Geral (Tabelas)":
     else:
         st.info(f"A tabela {tabela} está vazia no momento.")
     conn.close()
+
