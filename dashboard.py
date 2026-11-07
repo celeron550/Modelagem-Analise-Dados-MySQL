@@ -68,9 +68,43 @@ if escolha == "📈 Análises e Estatísticas":
             COUNT(*) as 'Quantidade'
         FROM dataset_bruto
         GROUP BY categoria_energia
-        ORDER BY 'Popularidade Média' DESC;
+        ORDER BY AVG(track_popularity) DESC;
     """, conn)
     st.dataframe(df_energia, use_container_width=True)
+    st.markdown("#### 4. Evolução da Popularidade e das Características Musicais por Ano")
+
+    df_anos = pd.read_sql("""
+        SELECT
+            CAST(LEFT(release_date, 4) AS UNSIGNED) AS ano,
+            COUNT(*) AS quantidade_musicas,
+            ROUND(AVG(track_popularity), 2) AS popularidade_media,
+            ROUND(AVG(energy), 3) AS energia_media,
+            ROUND(AVG(danceability), 3) AS dancabilidade_media
+        FROM dataset_bruto
+        WHERE release_date REGEXP '^[0-9]{4}'
+        GROUP BY
+            CAST(LEFT(release_date, 4) AS UNSIGNED)
+        HAVING COUNT(*) >= 5
+        ORDER BY ano;
+    """, conn)
+
+    st.markdown("**Dados agrupados por ano de lançamento**")
+    st.dataframe(df_anos, use_container_width=True)
+
+    st.markdown("**Evolução da popularidade média**")
+    st.line_chart(
+        df_anos.set_index("ano")[["popularidade_media"]]
+    )
+
+    st.markdown("**Evolução das características sonoras**")
+    st.line_chart(
+        df_anos.set_index("ano")[["energia_media", "dancabilidade_media"]]
+    )
+
+    st.markdown("**Quantidade de músicas por ano**")
+    st.bar_chart(
+        df_anos.set_index("ano")[["quantidade_musicas"]]
+    )
     conn.close()
 
 # ==========================================
