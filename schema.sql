@@ -1,6 +1,8 @@
 -- =======================================================================
 -- 1. SCHEMA PARA ANÁLISE DE DADOS (Dados Brutos do CSV)
 -- =======================================================================
+DROP DATABASE IF EXISTS musica_analise;
+DROP DATABASE IF EXISTS musica_app;
 CREATE DATABASE IF NOT EXISTS musica_analise;
 USE musica_analise;
 
