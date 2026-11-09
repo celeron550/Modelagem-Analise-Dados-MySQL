@@ -11,10 +11,10 @@ USE musica_analise;
 CREATE TABLE IF NOT EXISTS dataset_bruto (
     id INT AUTO_INCREMENT PRIMARY KEY,
     track_id VARCHAR(100),
-    artists TEXT,
+    artist_name TEXT,
     album_name VARCHAR(255),
     track_name VARCHAR(255),
-    popularity INT,
+    track_popularity INT,
     duration_ms INT,
     explicit BOOLEAN,
     danceability FLOAT,
