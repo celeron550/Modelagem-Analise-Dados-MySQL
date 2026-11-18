@@ -1,0 +1,56 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: musica_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_secret_change_me}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: musica_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-root_secret_change_me}
+      DB_ANALISE_NAME: ${DB_ANALISE_NAME:-db_analise_musica}
+      DB_APP_NAME: ${DB_APP_NAME:-db_app_musica}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-troque_esta_chave_secreta_em_producao_256bits}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: musica_frontend
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      API_BASE_URL: ${API_BASE_URL:-http://api:8000}
+    ports:
+      - "8501:8501"
+
+volumes:
+  mysql_data:
