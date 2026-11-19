@@ -43,7 +43,8 @@ jobs:
       - name: Inicializar Schemas MySQL
         run: |
           mysql -h 127.0.0.1 -P 3306 -u root -proot_test_password < database/01_schema_analise.sql
-          mysql -h 127.0.0.1 -P 3306 -u root -proot_test_password < database/02_schema_app.sql
+          mysql -h 127.0.0.1 -P 3306 -u root -proot_test_password < database/02_dados_spotify.sql
+          mysql -h 127.0.0.1 -P 3306 -u root -proot_test_password < database/03_schema_app.sql
 
       - name: Executar Testes (Pytest)
         env:
