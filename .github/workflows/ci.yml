@@ -2,7 +2,7 @@ name: CI - Lint & Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, rework]
   pull_request:
     branches: [main]
 
@@ -48,6 +48,7 @@ jobs:
 
       - name: Executar Testes (Pytest)
         env:
+          PYTHONPATH: backend
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_USER: root
