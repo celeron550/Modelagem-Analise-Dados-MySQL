@@ -27,7 +27,7 @@ UserOut,
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/auth/register", response_model=UserOut, status_code=status.HTTP_201_CREATED, tags=["Auth"])
+@router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED, tags=["Auth"])
 def register(payload: UserCreate):
     try:
         with get_engine().connect() as conn:
@@ -49,7 +49,7 @@ def register(payload: UserCreate):
         )
 
 
-@router.post("/auth/login", response_model=TokenResponse, tags=["Auth"])
+@router.post("/login", response_model=TokenResponse, tags=["Auth"])
 def login(payload: UserLogin):
     mock_user = UserOut(
         id_usuario=1,

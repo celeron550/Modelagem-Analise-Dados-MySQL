@@ -27,7 +27,7 @@ PopularidadeUpdate,
 
 router = APIRouter(prefix="/musicas", tags=["Catálogo"])
 
-@router.get("/musicas", response_model=list[MusicaOut], tags=["Catálogo"])
+@router.get("", response_model=list[MusicaOut], tags=["Catálogo"])
 def listar_musicas(
     termo: str = "",
     artista: Optional[str] = None,
@@ -69,7 +69,7 @@ def listar_musicas(
     ]
 
 
-@router.get("/musicas/{id_musica}", response_model=MusicaDetalheOut, tags=["Catálogo"])
+@router.get("/{id_musica}", response_model=MusicaDetalheOut, tags=["Catálogo"])
 def detalhe_musica(id_musica: int):
     """Obtém detalhes e média de avaliações de uma música específica."""
     try:
@@ -94,7 +94,7 @@ def detalhe_musica(id_musica: int):
     )
 
 
-@router.post("/musicas", response_model=dict, status_code=status.HTTP_201_CREATED, tags=["Catálogo"])
+@router.post("", response_model=dict, status_code=status.HTTP_201_CREATED, tags=["Catálogo"])
 def criar_musica(payload: MusicaCreate):
     """Insere nova música no catálogo (migrado de dashboard.py - Create)."""
     try:
@@ -117,7 +117,7 @@ def criar_musica(payload: MusicaCreate):
         )
 
 
-@router.patch("/musicas/{id_musica}/popularidade", response_model=dict, tags=["Catálogo"])
+@router.patch("/{id_musica}/popularidade", response_model=dict, tags=["Catálogo"])
 def atualizar_popularidade_musica(id_musica: int, payload: PopularidadeUpdate):
     """Atualiza a popularidade de uma faixa (migrado de dashboard.py - Update)."""
     try:
@@ -132,7 +132,7 @@ def atualizar_popularidade_musica(id_musica: int, payload: PopularidadeUpdate):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.delete("/musicas/{id_musica}", status_code=status.HTTP_204_NO_CONTENT, tags=["Catálogo"])
+@router.delete("/{id_musica}", status_code=status.HTTP_204_NO_CONTENT, tags=["Catálogo"])
 def deletar_musica(id_musica: int):
     """Remove uma faixa do catálogo (migrado de dashboard.py - Delete)."""
     try:

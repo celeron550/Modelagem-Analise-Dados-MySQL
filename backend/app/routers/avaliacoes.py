@@ -25,7 +25,7 @@ AvaliacaoUpdate,
 
 router = APIRouter(prefix="/avaliacoes", tags=["Avaliações"])
 
-@router.get("/avaliacoes", response_model=list[AvaliacaoOut], tags=["Avaliações"])
+@router.get("", response_model=list[AvaliacaoOut], tags=["Avaliações"])
 def listar_avaliacoes(id_musica: Optional[int] = None, limit: int = 100):
     """Lista avaliações cadastradas."""
     try:
@@ -60,7 +60,7 @@ def listar_avaliacoes(id_musica: Optional[int] = None, limit: int = 100):
     ]
 
 
-@router.post("/avaliacoes", response_model=AvaliacaoOut, status_code=status.HTTP_201_CREATED, tags=["Avaliações"])
+@router.post("", response_model=AvaliacaoOut, status_code=status.HTTP_201_CREATED, tags=["Avaliações"])
 def criar_avaliacao(payload: AvaliacaoCreate):
     """Registra uma nova avaliação via sp_inserir_avaliacao (migrado do dashboard.py)."""
     try:
@@ -94,7 +94,7 @@ def criar_avaliacao(payload: AvaliacaoCreate):
         )
 
 
-@router.put("/avaliacoes/{id_avaliacao}", response_model=AvaliacaoOut, tags=["Avaliações"])
+@router.put("/{id_avaliacao}", response_model=AvaliacaoOut, tags=["Avaliações"])
 def atualizar_avaliacao(id_avaliacao: int, payload: AvaliacaoUpdate):
     """Atualiza uma avaliação disparando trg_auditoria_avaliacao no MySQL."""
     try:
@@ -119,7 +119,7 @@ def atualizar_avaliacao(id_avaliacao: int, payload: AvaliacaoUpdate):
     )
 
 
-@router.delete("/avaliacoes/{id_avaliacao}", status_code=status.HTTP_204_NO_CONTENT, tags=["Avaliações"])
+@router.delete("/{id_avaliacao}", status_code=status.HTTP_204_NO_CONTENT, tags=["Avaliações"])
 def deletar_avaliacao(id_avaliacao: int):
     """Remove uma avaliação existente."""
     try:

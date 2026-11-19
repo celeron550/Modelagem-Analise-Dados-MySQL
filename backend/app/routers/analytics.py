@@ -25,7 +25,7 @@ RitmoAlbumOut,
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
 
-@router.get("/analytics/ranking-comunidade", response_model=list[RankingComunidadeOut], tags=["Analytics"])
+@router.get("/ranking-comunidade", response_model=list[RankingComunidadeOut], tags=["Analytics"])
 def ranking_comunidade(limit: int = 50):
     """Top faixas avaliadas pela comunidade através da view vw_ranking_comunidade."""
     try:
@@ -49,7 +49,7 @@ def ranking_comunidade(limit: int = 50):
     ]
 
 
-@router.get("/analytics/ranking-artistas", response_model=list[RankingArtistaOut], tags=["Analytics"])
+@router.get("/ranking-artistas", response_model=list[RankingArtistaOut], tags=["Analytics"])
 def ranking_artistas(limit: int = 10):
     """Ranking de artistas por popularidade agregada (migrado de consultas.py - rank_popularidade)."""
     try:
@@ -66,7 +66,7 @@ def ranking_artistas(limit: int = 10):
     ]
 
 
-@router.get("/analytics/correlacao-audio", response_model=list[CorrelacaoAudioOut], tags=["Analytics"])
+@router.get("/correlacao-audio", response_model=list[CorrelacaoAudioOut], tags=["Analytics"])
 def correlacao_audio(min_popularity: int = 60):
     """Relação entre energia, danceability e popularidade (migrado de consultas.py - analise_audio)."""
     try:
@@ -95,7 +95,7 @@ def correlacao_audio(min_popularity: int = 60):
     ]
 
 
-@router.get("/analytics/ritmo-album", response_model=list[RitmoAlbumOut], tags=["Analytics"])
+@router.get("/ritmo-album", response_model=list[RitmoAlbumOut], tags=["Analytics"])
 def ritmo_album():
     """Estatísticas de BPM por álbum de cada artista (migrado de consultas.py - ritmo_album)."""
     try:
@@ -126,7 +126,7 @@ def ritmo_album():
     ]
 
 
-@router.get("/analytics/kpis", response_model=KpiCatalogoOut, tags=["Analytics"])
+@router.get("/kpis", response_model=KpiCatalogoOut, tags=["Analytics"])
 def kpis_catalogo():
     """Indicadores consolidados (COUNT, AVG, MAX, MIN) migrados de dashboard.py."""
     try:
