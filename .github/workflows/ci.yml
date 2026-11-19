@@ -1,0 +1,59 @@
+name: CI - Lint & Tests
+
+on:
+  push:
+    branches: [main, rework]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot_test_password"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar dependências do backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Executar Linter (Ruff)
+        run: ruff check backend
+
+      - name: Inicializar Schemas MySQL
+        run: |
+          mysql -h 127.0.0.1 -P 3306 -u root -proot_test_password < database/01_schema_analise.sql
+          mysql -h 127.0.0.1 -P 3306 -u root -proot_test_password < database/02_dados_spotify.sql
+          mysql -h 127.0.0.1 -P 3306 -u root -proot_test_password < database/03_schema_app.sql
+
+      - name: Executar Testes (Pytest)
+        env:
+          PYTHONPATH: backend
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWORD: root_test_password
+          DB_ANALISE_NAME: db_analise_musica
+          DB_APP_NAME: db_app_musica
+          JWT_SECRET_KEY: ci_test_secret_key
+        run: pytest backend/tests -v
