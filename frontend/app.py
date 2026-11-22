@@ -221,22 +221,49 @@ elif escolha == "⚙️ Gerenciar Catálogo (CRUD)":
                 except Exception as e:
                     st.error(f"Falha de conexão com a API: {e}")
 
+
     # --- READ ---
     elif acao == "2. Consultar Registros (Read)":
         st.markdown("#### Consultar Catálogo")
-        termo_busca = st.text_input("Buscar por título ou artista:", "")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            termo_busca = st.text_input("Buscar por título:")
+
+        with col2:
+            artista_busca = st.text_input("Filtrar por artista:")
+
+        with col3:
+            album_busca = st.text_input("Filtrar por álbum:")
+
+        params = {"limit": 100}
+
+        if termo_busca:
+            params["termo"] = termo_busca
+
+        if artista_busca:
+            params["artista"] = artista_busca
+
+        if album_busca:
+            params["album"] = album_busca
+
         try:
-            params = {"limit": 100}
-            if termo_busca:
-                params["termo"] = termo_busca
-            resp_read = httpx.get(f"{API_URL}/musicas", params=params, timeout=5.0)
+            resp_read = httpx.get(
+                f"{API_URL}/musicas",
+                params=params,
+                timeout=5.0
+            )
+
             if resp_read.status_code == 200:
                 df_read = pd.DataFrame(resp_read.json())
                 st.dataframe(df_read, use_container_width=True)
             else:
                 st.error(f"Erro ao buscar registros: {resp_read.status_code}")
+
         except Exception as e:
             st.error(f"Falha de conexão com a API: {e}")
+
 
     # --- UPDATE ---
     elif acao == "3. Atualizar Popularidade (Update)":
