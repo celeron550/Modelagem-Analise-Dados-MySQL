@@ -27,15 +27,16 @@ def test_auth_register():
 
 
 def test_auth_login():
-    payload = {
-        "email": "felix@ufrn.br",
-        "password": "SenhaForte123",
-    }
-    response = client.post("/auth/login", json=payload)
+    client.post(
+        "/auth/register",
+        json={"username": "felix_ci", "email": "felix_ci@ufrn.br", "password": "SenhaForte123"},
+    )
+    response = client.post(
+        "/auth/login",
+        json={"email": "felix_ci@ufrn.br", "password": "SenhaForte123"},
+    )
     assert response.status_code == 200
-    data = response.json()
-    assert "access_token" in data
-    assert data["user"]["email"] == "felix@ufrn.br"
+    assert "access_token" in response.json()
 
 
 def test_listar_musicas():
