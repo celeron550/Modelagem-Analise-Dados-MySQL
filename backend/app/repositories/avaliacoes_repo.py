@@ -33,7 +33,7 @@ def listar_avaliacoes(
     id_usuario: int | None = None,
     limit: int = 100,
 ) -> list[dict[str, Any]]:
-    """Lista avaliações com dados do usuário e da música (vw_avaliacoes_detalhadas)."""
+    """Lista avaliações com dados do usuário e da música."""
     conditions = ["1=1"]
     params: dict[str, Any] = {"limit": limit}
 
@@ -102,40 +102,20 @@ def criar_avaliacao(
     nota: float,
     comentario: str | None = None,
 ) -> int:
-    """Insere avaliação no banco usando a Stored Procedure sp_inserir_avaliacao com fallback seguro."""
-    try:
-        sql = text(f"CALL {settings.DB_APP_NAME}.sp_inserir_avaliacao(:user, :musica, :nota, :comentario)")
-        conn.execute(sql, {
-            "user": id_usuario,
-            "musica": id_musica,
-            "nota": nota,
-            "comentario": comentario,
-        })
-        conn.commit()
-    except Exception:
-        # Fallback para INSERT direto caso a Stored Procedure não esteja registrada
-        sql_fallback = text(f"""
-            INSERT INTO {settings.DB_APP_NAME}.Avaliacao_Musica
-                (id_usuario, id_musica, nota, comentario)
-            VALUES
-                (:user, :musica, :nota, :comentario)
-        """)
-        conn.execute(sql_fallback, {
-            "user": id_usuario,
-            "musica": id_musica,
-            "nota": nota,
-            "comentario": comentario,
-        })
-        conn.commit()
-
-    # Recupera o ID gerado para a chave única (id_usuario, id_musica)
-    sql_id = text(f"""
-        SELECT id_avaliacao FROM {settings.DB_APP_NAME}.Avaliacao_Musica
-        WHERE id_usuario = :user AND id_musica = :musica
-        ORDER BY id_avaliacao DESC LIMIT 1
+    """Insere avaliação no banco deixando erros de integridade (FK/UNIQUE) propagarem."""
+    sql_insert = text(f"""
+        INSERT INTO {settings.DB_APP_NAME}.Avaliacao_Musica
+            (id_usuario, id_musica, nota, comentario)
+        VALUES
+            (:user, :musica, :nota, :comentario)
     """)
-    row = conn.execute(sql_id, {"user": id_usuario, "musica": id_musica}).first()
-    return row[0] if row else 1
+    res = conn.execute(sql_insert, {
+        "user": id_usuario,
+        "musica": id_musica,
+        "nota": nota,
+        "comentario": comentario,
+    })
+    return res.lastrowid
 
 
 def atualizar_avaliacao(
@@ -161,7 +141,6 @@ def atualizar_avaliacao(
 
     sql = text(f"UPDATE {settings.DB_APP_NAME}.Avaliacao_Musica SET {', '.join(fields)} WHERE id_avaliacao = :id_avaliacao")
     res = conn.execute(sql, params)
-    conn.commit()
     return res.rowcount > 0
 
 
@@ -169,7 +148,6 @@ def deletar_avaliacao(conn: Connection, id_avaliacao: int) -> bool:
     """Remove uma avaliação pelo ID."""
     sql = text(f"DELETE FROM {settings.DB_APP_NAME}.Avaliacao_Musica WHERE id_avaliacao = :id_avaliacao")
     res = conn.execute(sql, {"id_avaliacao": id_avaliacao})
-    conn.commit()
     return res.rowcount > 0
 
 
@@ -191,7 +169,6 @@ def obter_ou_criar_usuario(
         VALUES (:username, :email, 'mock_hash', :role)
     """)
     res = conn.execute(sql_ins, {"username": username, "email": default_email, "role": role})
-    conn.commit()
     new_id = res.lastrowid
     return {
         "id_usuario": new_id,

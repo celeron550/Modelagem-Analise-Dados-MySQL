@@ -1,3 +1,4 @@
+import uuid
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -13,16 +14,17 @@ def test_health_check():
 
 
 def test_auth_register():
+    sufixo = uuid.uuid4().hex[:8]
     payload = {
-        "username": "tester",
-        "email": "tester@ufrn.br",
+        "username": f"tester_{sufixo}",
+        "email": f"tester_{sufixo}@ufrn.br",
         "password": "SenhaForte123",
     }
     response = client.post("/auth/register", json=payload)
     assert response.status_code == 201
     data = response.json()
-    assert data["username"] == "tester"
-    assert data["email"] == "tester@ufrn.br"
+    assert data["username"] == f"tester_{sufixo}"
+    assert data["email"] == f"tester_{sufixo}@ufrn.br"
     assert data["role"] == "USER"
 
 
@@ -59,8 +61,21 @@ def test_detalhe_musica():
 
 
 def test_criar_e_listar_avaliacoes():
+    sufixo = uuid.uuid4().hex[:8]
+    res_musica = client.post(
+        "/musicas",
+        json={
+            "titulo": f"Musica API {sufixo}",
+            "artista": f"Artista API {sufixo}",
+            "album": f"Album API {sufixo}",
+            "popularity": 75,
+        },
+    )
+    assert res_musica.status_code == 201
+    id_musica = res_musica.json()["id_musica"]
+
     payload = {
-        "id_musica": 1,
+        "id_musica": id_musica,
         "nota": 9.0,
         "comentario": "Excelente composição!",
     }
@@ -68,20 +83,40 @@ def test_criar_e_listar_avaliacoes():
     assert response.status_code == 201
     data = response.json()
     assert data["nota"] == 9.0
-    assert data["id_musica"] == 1
 
-    resp_list = client.get("/avaliacoes?id_musica=1")
-    assert resp_list.status_code == 200
-    assert isinstance(resp_list.json(), list)
+    res_list = client.get(f"/avaliacoes?id_musica={id_musica}")
+    assert res_list.status_code == 200
+    assert len(res_list.json()) >= 1
 
 
 def test_atualizar_e_deletar_avaliacao():
-    payload = {"nota": 8.0, "comentario": "Revisado"}
-    response = client.put("/avaliacoes/1", json=payload)
-    assert response.status_code == 200
-    assert response.json()["id_avaliacao"] == 1
+    sufixo = uuid.uuid4().hex[:8]
+    res_musica = client.post(
+        "/musicas",
+        json={
+            "titulo": f"Musica Del {sufixo}",
+            "artista": f"Artista Del {sufixo}",
+            "album": f"Album Del {sufixo}",
+            "popularity": 70,
+        },
+    )
+    assert res_musica.status_code == 201
+    id_musica = res_musica.json()["id_musica"]
 
-    resp_del = client.delete("/avaliacoes/1")
+    res_create = client.post(
+        "/avaliacoes",
+        json={"id_musica": id_musica, "nota": 7.5, "comentario": "Inicial"},
+    )
+    assert res_create.status_code == 201
+    id_avaliacao = res_create.json()["id_avaliacao"]
+
+    payload = {"nota": 8.0, "comentario": "Revisado"}
+    response = client.put(f"/avaliacoes/{id_avaliacao}", json=payload)
+    assert response.status_code == 200
+    assert response.json()["id_avaliacao"] == id_avaliacao
+    assert response.json()["nota"] == 8.0
+
+    resp_del = client.delete(f"/avaliacoes/{id_avaliacao}")
     assert resp_del.status_code == 204
 
 
