@@ -5,7 +5,7 @@ from app.core.config import settings
 
 
 def buscar_detalhe_musica(conn: Connection, id_musica: int) -> dict[str, Any] | None:
-    """Busca detalhes completos de uma faixa com estatísticas da comunidade (Marco 0 / Dev 3)."""
+    """Busca detalhes completos de uma faixa com estatísticas da comunidade."""
     sql = text(f"""
         SELECT
             m.id_musica,
@@ -31,7 +31,7 @@ def buscar_detalhe_musica(conn: Connection, id_musica: int) -> dict[str, Any] | 
 
 
 def buscar_musica_por_faixa(conn: Connection, nome_musica: str) -> list[dict[str, Any]]:
-    """Evolução de query_musica() de consultas.py: busca faixas pelo título."""
+    """Busca faixas pelo título."""
     sql = text(f"""
         SELECT
             m.id_musica,
@@ -100,7 +100,7 @@ def listar_musicas(
 
 
 def musicas_por_artista(conn: Connection, nome_artista: str) -> list[dict[str, Any]]:
-    """Evolução de musicas_por_artista() de consultas.py."""
+    """Lista músicas de um artista."""
     sql = text(f"""
         SELECT
             m.id_musica,
@@ -122,7 +122,7 @@ def musicas_por_artista(conn: Connection, nome_artista: str) -> list[dict[str, A
 
 
 def musicas_por_album(conn: Connection, nome_album: str) -> list[dict[str, Any]]:
-    """Evolução de musicas_por_album() de consultas.py."""
+    """Lista músicas de um álbum."""
     sql = text(f"""
         SELECT
             m.id_musica,
@@ -151,8 +151,7 @@ def criar_musica_completa(
     energy: float | None = None,
     tempo: float | None = None,
 ) -> int:
-    """Operação de CREATE do dashboard.py migrada para repositório seguro."""
-    # 1. Artista (reaproveita ou cria)
+    """Cria artista/álbum se necessário e insere nova música."""
     sql_art_find = text(f"SELECT id_artista FROM {settings.DB_ANALISE_NAME}.Artista WHERE nome = :nome")
     row_art = conn.execute(sql_art_find, {"nome": artista}).first()
     if row_art:
@@ -162,7 +161,6 @@ def criar_musica_completa(
         res_art = conn.execute(sql_art_ins, {"nome": artista})
         id_artista = res_art.lastrowid
 
-    # 2. Album (reaproveita ou cria)
     sql_alb_find = text(
         f"SELECT id_album FROM {settings.DB_ANALISE_NAME}.Album WHERE nome = :nome AND id_artista = :id_artista"
     )
@@ -176,7 +174,6 @@ def criar_musica_completa(
         res_alb = conn.execute(sql_alb_ins, {"id_artista": id_artista, "nome": album})
         id_album = res_alb.lastrowid
 
-    # 3. Musica
     sql_mus_ins = text(f"""
         INSERT INTO {settings.DB_ANALISE_NAME}.Musica
             (id_album, titulo, popularity, danceability, energy, tempo)
@@ -191,21 +188,18 @@ def criar_musica_completa(
         "energy": energy,
         "tempo": tempo,
     })
-    conn.commit()
     return res_mus.lastrowid
 
 
 def atualizar_popularidade(conn: Connection, id_musica: int, nova_popularidade: int) -> bool:
-    """Operação de UPDATE do dashboard.py migrada para repositório seguro."""
+    """Atualiza popularidade da faixa."""
     sql = text(f"UPDATE {settings.DB_ANALISE_NAME}.Musica SET popularity = :pop WHERE id_musica = :id")
     res = conn.execute(sql, {"pop": nova_popularidade, "id": id_musica})
-    conn.commit()
     return res.rowcount > 0
 
 
 def remover_musica(conn: Connection, id_musica: int) -> bool:
-    """Operação de DELETE do dashboard.py migrada para repositório seguro."""
+    """Remove faixa do catálogo."""
     sql = text(f"DELETE FROM {settings.DB_ANALISE_NAME}.Musica WHERE id_musica = :id")
     res = conn.execute(sql, {"id": id_musica})
-    conn.commit()
     return res.rowcount > 0
